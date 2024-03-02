@@ -1,0 +1,293 @@
+<html>
+<head>
+<title>edit.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6897bb;}
+.s3 { color: #6a8759;}
+.s4 { color: #808080;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+edit.py</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">math</span>
+
+<span class="s0">import </span><span class="s1">arcade</span>
+<span class="s0">import </span><span class="s1">random </span><span class="s0">as </span><span class="s1">r</span>
+
+<span class="s1">screenwidth = </span><span class="s2">1200</span>
+<span class="s1">screenheight = </span><span class="s2">800</span>
+
+<span class="s1">floortexture = </span><span class="s3">r&quot;C:\Users\Danie\Desktop\CS2pycharm\ProjectPart2(Game)\m-008.jpg&quot;</span>
+<span class="s1">playertexture = </span><span class="s3">r&quot;C:\Users\Danie\Desktop\CS2pycharm\ProjectPart2(Game)\playersprite.png&quot;</span>
+<span class="s1">bullettexture = </span><span class="s3">r&quot;C:\Users\Danie\Desktop\CS2pycharm\ProjectPart2(Game)\bulletsprite.png&quot;</span>
+<span class="s1">enemytexture = </span><span class="s3">r&quot;C:\Users\Danie\Desktop\CS2pycharm\ProjectPart2(Game)\enemysprite.png&quot;</span>
+<span class="s1">enemy2texture = </span><span class="s3">r&quot;C:\Users\Danie\Desktop\CS2pycharm\ProjectPart2(Game)\enemy2sprite.png&quot;</span>
+<span class="s1">startscreentexture = </span><span class="s3">r&quot;C:\Users\Danie\Desktop\CS2pycharm\ProjectPart2(Game)\backgroundimage.png&quot;</span>
+<span class="s1">gameoverscreentexture = </span><span class="s3">r&quot;C:\Users\Danie\Desktop\CS2pycharm\ProjectPart2(Game)\gameover.png&quot;</span>
+
+
+<span class="s1">title = </span><span class="s3">'Vanquisher'</span>
+
+<span class="s1">full_screen = </span><span class="s0">False</span>
+
+<span class="s1">isWindowResizable = </span><span class="s0">False</span>
+
+<span class="s1">playerscale = </span><span class="s2">0.10</span>
+<span class="s1">enemyscale = </span><span class="s2">0.13</span>
+<span class="s1">itemscale = </span><span class="s2">0.01</span>
+<span class="s1">enemyspeed = </span><span class="s2">0.35</span>
+<span class="s1">bulletspeed = </span><span class="s2">10</span>
+
+
+
+
+
+
+<span class="s0">class </span><span class="s1">StartScreenView(arcade.View):</span>
+    <span class="s0">def </span><span class="s1">on_show_view(self):</span>
+        <span class="s1">self.background = arcade.load_texture(startscreentexture)</span>
+
+    <span class="s0">def </span><span class="s1">on_draw(self):</span>
+        <span class="s1">self.clear()</span>
+        <span class="s1">arcade.draw_lrwh_rectangle_textured(</span><span class="s2">0</span><span class="s0">, </span><span class="s2">0</span><span class="s0">, </span><span class="s1">screenwidth</span><span class="s0">, </span><span class="s1">screenheight</span><span class="s0">, </span><span class="s1">self.background)</span>
+        <span class="s1">arcade.draw_text(</span><span class="s3">'Vanquisher'</span><span class="s0">, </span><span class="s1">(screenwidth // </span><span class="s2">2</span><span class="s1">) - </span><span class="s2">100</span><span class="s0">, </span><span class="s1">screenheight - </span><span class="s2">100</span><span class="s0">, </span><span class="s1">color=arcade.color.AQUAMARINE</span><span class="s0">, </span><span class="s1">font_size=</span><span class="s2">30</span><span class="s0">, </span><span class="s1">bold=</span><span class="s0">True</span><span class="s1">)</span>
+        <span class="s1">arcade.draw_text(</span><span class="s3">'Press Space To Begin'</span><span class="s0">, </span><span class="s1">screenwidth * </span><span class="s2">.3</span><span class="s0">, </span><span class="s1">screenheight // </span><span class="s2">2</span><span class="s0">, </span><span class="s1">color=arcade.color.GOLD</span><span class="s0">, </span><span class="s1">font_size=</span><span class="s2">40</span><span class="s0">, </span><span class="s1">bold=</span><span class="s0">True, </span><span class="s1">italic=</span><span class="s0">True</span><span class="s1">)</span>
+    <span class="s0">def </span><span class="s1">on_key_press(self</span><span class="s0">, </span><span class="s1">key</span><span class="s0">, </span><span class="s1">modifiers):</span>
+        <span class="s0">if </span><span class="s1">key == arcade.key.SPACE:</span>
+            <span class="s1">gameview = SurvivorGameView()</span>
+            <span class="s1">gameview.setup()</span>
+            <span class="s1">self.window.show_view(gameview)</span>
+<span class="s0">class </span><span class="s1">GameOverView(arcade.View):</span>
+    <span class="s0">def </span><span class="s1">on_show_view(self):</span>
+        <span class="s1">self.background = arcade.load_texture(gameoverscreentexture)</span>
+    <span class="s0">def </span><span class="s1">on_draw(self):</span>
+        <span class="s1">self.clear()</span>
+        <span class="s1">arcade.draw_lrwh_rectangle_textured(</span><span class="s2">0</span><span class="s0">, </span><span class="s2">0</span><span class="s0">, </span><span class="s1">screenwidth</span><span class="s0">, </span><span class="s1">screenheight</span><span class="s0">, </span><span class="s1">self.background)</span>
+        <span class="s1">arcade.draw_text(</span><span class="s3">'Game Over'</span><span class="s0">, </span><span class="s1">(screenwidth // </span><span class="s2">2</span><span class="s1">) - </span><span class="s2">400</span><span class="s0">, </span><span class="s1">screenheight // </span><span class="s2">2 </span><span class="s1">+ </span><span class="s2">50</span><span class="s0">, </span><span class="s1">color=arcade.color.DARK_RED</span><span class="s0">, </span><span class="s1">font_size=</span><span class="s2">100</span><span class="s0">, </span><span class="s1">italic=</span><span class="s0">True</span><span class="s1">)</span>
+        <span class="s1">arcade.draw_text(</span><span class="s3">'Press Space To Restart'</span><span class="s0">, </span><span class="s1">(screenwidth // </span><span class="s2">2</span><span class="s1">) - </span><span class="s2">100</span><span class="s0">, </span><span class="s1">screenheight * </span><span class="s2">.2</span><span class="s0">, </span><span class="s1">color=arcade.color.BLUEBERRY</span><span class="s0">, </span><span class="s1">font_size=</span><span class="s2">30</span><span class="s1">)</span>
+        <span class="s1">arcade.draw_text(</span><span class="s3">f'Final Score: </span><span class="s0">{</span><span class="s1">finalscore</span><span class="s0">}</span><span class="s3">'</span><span class="s0">, </span><span class="s1">screenwidth * </span><span class="s2">.6</span><span class="s0">, </span><span class="s1">screenheight - </span><span class="s2">100</span><span class="s0">, </span><span class="s1">color=arcade.color.NEON_FUCHSIA</span><span class="s0">, </span><span class="s1">font_size=</span><span class="s2">20</span><span class="s1">)</span>
+    <span class="s0">def </span><span class="s1">on_key_press(self</span><span class="s0">, </span><span class="s1">key</span><span class="s0">, </span><span class="s1">modifiers):</span>
+        <span class="s0">if </span><span class="s1">key == arcade.key.SPACE:</span>
+            <span class="s1">gameview = StartScreenView()</span>
+            <span class="s1">self.window.show_view(gameview)</span>
+
+<span class="s0">class </span><span class="s1">SurvivorGameView(arcade.View):</span>
+
+
+<span class="s4">#   This method is used to initialize variables(typically before assigning them)</span>
+    <span class="s0">def </span><span class="s1">__init__(self):</span>
+
+        <span class="s1">super().__init__()</span>
+        <span class="s1">self.score = </span><span class="s2">0</span>
+        <span class="s1">self.round = </span><span class="s2">0</span>
+        <span class="s1">self.enemynum1 = </span><span class="s0">None</span>
+        <span class="s1">self.enemynum2 = </span><span class="s0">None</span>
+        <span class="s1">self.ammo = </span><span class="s0">None</span>
+        <span class="s1">self.hasmousebeenclicked = </span><span class="s0">False</span>
+        <span class="s1">self.isdead = </span><span class="s0">False</span>
+        <span class="s1">self.playerSpritevelx = </span><span class="s2">0</span>
+        <span class="s1">self.playerSpritevely = </span><span class="s2">0</span>
+
+        <span class="s1">self.x = </span><span class="s0">None</span>
+
+        <span class="s1">self.background_image = </span><span class="s0">None</span>
+
+        <span class="s1">self.playerList = </span><span class="s0">None</span>
+        <span class="s1">self.enemyList = </span><span class="s0">None</span>
+        <span class="s1">self.itemList = </span><span class="s0">None</span>
+        <span class="s1">self.playerSprite = </span><span class="s0">None</span>
+        <span class="s1">self.enemySprite = </span><span class="s0">None</span>
+        <span class="s1">self.weapon = </span><span class="s0">None</span>
+
+        <span class="s1">self.paused = </span><span class="s0">False</span>
+
+    <span class="s0">def </span><span class="s1">setup(self):</span>
+<span class="s4">#       incrementable variables</span>
+        <span class="s1">self.enemynum1 = </span><span class="s2">25</span>
+        <span class="s1">self.enemynum2 = </span><span class="s2">25</span>
+        <span class="s1">self.x = </span><span class="s2">0</span>
+        <span class="s1">self.ammo = </span><span class="s2">15</span>
+        <span class="s0">for </span><span class="s1">num </span><span class="s0">in </span><span class="s1">range(self.round):</span>
+            <span class="s0">if </span><span class="s1">self.ammo == </span><span class="s2">5</span><span class="s1">:</span>
+                <span class="s0">pass</span>
+            <span class="s0">else</span><span class="s1">:</span>
+                <span class="s1">self.ammo -= </span><span class="s2">5</span>
+        <span class="s1">self.background_image = arcade.load_texture(floortexture)</span>
+
+<span class="s4">#       Sprite-lists</span>
+        <span class="s1">self.itemList = arcade.SpriteList()</span>
+        <span class="s1">self.playerList = arcade.SpriteList()</span>
+        <span class="s1">self.enemyList = arcade.SpriteList()</span>
+
+
+<span class="s4">#       Sets Initial player position</span>
+        <span class="s1">self.playerSprite = arcade.Sprite(playertexture</span><span class="s0">, </span><span class="s1">playerscale)</span>
+        <span class="s1">self.playerSprite.center_x = screenwidth / </span><span class="s2">2</span>
+        <span class="s1">self.playerSprite.center_y = screenheight / </span><span class="s2">2</span>
+        <span class="s1">self.playerList.append(self.playerSprite)</span>
+        <span class="s1">self.weapon = arcade.Sprite(bullettexture</span><span class="s0">, </span><span class="s1">itemscale)</span>
+
+        <span class="s1">self.itemList.append(self.weapon)</span>
+
+
+        <span class="s1">x = int(self.playerSprite.center_x - </span><span class="s2">300.0</span><span class="s1">)</span>
+        <span class="s1">y = int(self.playerSprite.center_x + </span><span class="s2">300.0</span><span class="s1">)</span>
+        <span class="s1">x2 = int(self.playerSprite.center_y - </span><span class="s2">100.0</span><span class="s1">)</span>
+        <span class="s1">y2 = int(self.playerSprite.center_y + </span><span class="s2">100.0</span><span class="s1">)</span>
+
+
+
+
+        <span class="s0">while </span><span class="s1">self.enemynum1 &gt; </span><span class="s2">0</span><span class="s1">:</span>
+            <span class="s1">self.enemySprite = arcade.Sprite(enemytexture</span><span class="s0">, </span><span class="s1">enemyscale)</span>
+            <span class="s1">self.enemySprite.position = (r.randrange(</span><span class="s2">0</span><span class="s0">, </span><span class="s1">screenwidth)</span><span class="s0">, </span><span class="s1">r.randrange(</span><span class="s2">0</span><span class="s0">, </span><span class="s1">screenheight))</span>
+            <span class="s0">if </span><span class="s1">(((self.enemySprite.center_x &lt; x) </span><span class="s0">or </span><span class="s1">(self.enemySprite.center_x &gt; y)) </span><span class="s0">and </span><span class="s1">((self.enemySprite.center_y &lt; x2) </span><span class="s0">or </span><span class="s1">(self.enemySprite.center_y &gt; y2))) :</span>
+                <span class="s1">self.enemyList.append(self.enemySprite)</span>
+                <span class="s1">self.enemynum1 -= </span><span class="s2">1</span>
+            <span class="s0">else</span><span class="s1">:</span>
+                <span class="s0">continue</span>
+
+
+        <span class="s0">while </span><span class="s1">self.enemynum2 &gt; </span><span class="s2">0</span><span class="s1">:</span>
+            <span class="s1">self.enemySprite = arcade.Sprite(enemy2texture</span><span class="s0">, </span><span class="s1">enemyscale)</span>
+            <span class="s1">self.enemySprite.position = (r.randrange(</span><span class="s2">0</span><span class="s0">, </span><span class="s1">screenwidth)</span><span class="s0">, </span><span class="s1">r.randrange(</span><span class="s2">0</span><span class="s0">, </span><span class="s1">screenheight))</span>
+            <span class="s0">if </span><span class="s1">(((self.enemySprite.center_x &lt; x) </span><span class="s0">or </span><span class="s1">(self.enemySprite.center_x &gt; y)) </span><span class="s0">and </span><span class="s1">((self.enemySprite.center_y &lt; x2) </span><span class="s0">or </span><span class="s1">(self.enemySprite.center_y &gt; y2))) :</span>
+                <span class="s1">self.enemyList.append(self.enemySprite)</span>
+                <span class="s1">self.enemynum2 -= </span><span class="s2">1</span>
+            <span class="s0">else</span><span class="s1">:</span>
+                <span class="s0">continue</span>
+
+
+
+<span class="s4">#   Draws to the window(mostly used for our sprite-lists in this case, which is more efficient)</span>
+    <span class="s0">def </span><span class="s1">on_draw(self):</span>
+        <span class="s1">self.clear()</span>
+
+        <span class="s1">arcade.draw_lrwh_rectangle_textured(</span><span class="s2">0</span><span class="s0">, </span><span class="s2">0</span><span class="s0">, </span><span class="s1">screenwidth</span><span class="s0">, </span><span class="s1">screenheight</span><span class="s0">, </span><span class="s1">self.background_image)</span>
+        <span class="s1">arcade.draw_text(</span><span class="s3">f'Score: </span><span class="s0">{</span><span class="s1">self.score</span><span class="s0">}</span><span class="s3">'</span><span class="s0">, </span><span class="s1">(screenwidth // </span><span class="s2">2</span><span class="s1">) - </span><span class="s2">50</span><span class="s0">, </span><span class="s1">screenheight - </span><span class="s2">35</span><span class="s0">, </span><span class="s1">font_size = </span><span class="s2">20</span><span class="s0">, </span><span class="s1">color=arcade.color.BLACK)</span>
+        <span class="s1">arcade.draw_text(</span><span class="s3">f'Ammo: </span><span class="s0">{</span><span class="s1">self.ammo</span><span class="s0">}</span><span class="s3">/15'</span><span class="s0">, </span><span class="s1">screenwidth * </span><span class="s2">.1</span><span class="s0">, </span><span class="s1">screenheight - </span><span class="s2">35</span><span class="s0">, </span><span class="s1">font_size = </span><span class="s2">20</span><span class="s0">, </span><span class="s1">color=arcade.color.RED</span><span class="s0">, </span><span class="s1">bold=</span><span class="s0">True</span><span class="s1">)</span>
+
+        <span class="s1">self.playerList.draw()</span>
+        <span class="s1">self.enemyList.draw()</span>
+        <span class="s1">self.itemList.draw()</span>
+
+
+<span class="s4">#   Use this to position sprites and other things that require updates every frame(ie enemy/ loot position)</span>
+    <span class="s0">def </span><span class="s1">on_update(self</span><span class="s0">, </span><span class="s1">delta_time: float</span><span class="s0">, </span><span class="s1">spatialhashing = </span><span class="s0">True</span><span class="s1">):</span>
+        <span class="s0">if </span><span class="s1">self.isdead:</span>
+            <span class="s1">gameview = GameOverView()</span>
+            <span class="s1">self.window.show_view(gameview)</span>
+            <span class="s0">global </span><span class="s1">finalscore</span>
+            <span class="s1">finalscore = self.score</span>
+        <span class="s0">if </span><span class="s1">self.paused:</span>
+            <span class="s0">return</span>
+        <span class="s0">else</span><span class="s1">:</span>
+
+            <span class="s1">self.itemList.update()</span>
+            <span class="s1">self.enemyList.update()</span>
+            <span class="s1">self.playerList.update()</span>
+            <span class="s1">self.playerSprite.center_x += self.playerSpritevelx * delta_time</span>
+            <span class="s1">self.playerSprite.center_y += self.playerSpritevely * delta_time</span>
+            <span class="s0">if </span><span class="s1">self.hasmousebeenclicked == </span><span class="s0">False</span><span class="s1">:</span>
+                <span class="s1">self.weapon.center_x = self.playerSprite.center_x</span>
+                <span class="s1">self.weapon.center_y = self.playerSprite.center_y</span>
+
+            <span class="s0">for </span><span class="s1">enemy </span><span class="s0">in </span><span class="s1">self.enemyList:</span>
+                <span class="s0">if </span><span class="s1">enemy.center_x &lt; self.playerSprite.center_x:</span>
+                    <span class="s1">enemy.center_x += min(enemyspeed</span><span class="s0">, </span><span class="s1">self.playerSprite.center_x - enemy.center_x)</span>
+                <span class="s0">elif </span><span class="s1">enemy.center_x &gt; self.playerSprite.center_x:</span>
+                    <span class="s1">enemy.center_x -= min(enemyspeed</span><span class="s0">, </span><span class="s1">enemy.center_x - self.playerSprite.center_x)</span>
+
+            <span class="s0">for </span><span class="s1">enemy </span><span class="s0">in </span><span class="s1">self.enemyList:</span>
+                <span class="s0">if </span><span class="s1">enemy.center_y &lt; self.playerSprite.center_y:</span>
+                    <span class="s1">enemy.center_y += min(enemyspeed</span><span class="s0">, </span><span class="s1">self.playerSprite.center_y - enemy.center_y)</span>
+                <span class="s0">elif </span><span class="s1">enemy.center_y &gt; self.playerSprite.center_y:</span>
+                    <span class="s1">enemy.center_y -= min(enemyspeed</span><span class="s0">, </span><span class="s1">enemy.center_y - self.playerSprite.center_y)</span>
+
+            <span class="s1">enemyColisionList = arcade.check_for_collision_with_list(self.playerSprite</span><span class="s0">, </span><span class="s1">self.enemyList)</span>
+            <span class="s0">for </span><span class="s1">enemy </span><span class="s0">in </span><span class="s1">enemyColisionList:</span>
+                <span class="s1">self.isdead = </span><span class="s0">True</span>
+            <span class="s1">bulletCollsionList = arcade.check_for_collision_with_list(self.weapon</span><span class="s0">, </span><span class="s1">self.enemyList)</span>
+            <span class="s0">for </span><span class="s1">enemy </span><span class="s0">in </span><span class="s1">bulletCollsionList:</span>
+                <span class="s1">enemy.remove_from_sprite_lists()</span>
+                <span class="s1">self.score += </span><span class="s2">1</span>
+
+            <span class="s0">if </span><span class="s1">len(self.enemyList) == </span><span class="s2">0</span><span class="s1">:</span>
+                <span class="s1">self.round += </span><span class="s2">1</span>
+                <span class="s1">self.setup()</span>
+
+
+
+
+
+<span class="s4">#   Deals with mouse input</span>
+    <span class="s0">def </span><span class="s1">on_mouse_press(self</span><span class="s0">, </span><span class="s1">x: int</span><span class="s0">, </span><span class="s1">y: int</span><span class="s0">, </span><span class="s1">button: int</span><span class="s0">, </span><span class="s1">modifiers: int):</span>
+        <span class="s0">if </span><span class="s1">self.paused:</span>
+            <span class="s0">return</span>
+        <span class="s0">if </span><span class="s1">self.ammo &lt; </span><span class="s2">1</span><span class="s1">:</span>
+            <span class="s0">return</span>
+        <span class="s4"># Note that you copied code for this. Arcade documentation</span>
+        <span class="s1">self.ammo -= </span><span class="s2">1</span>
+        <span class="s1">self.hasmousebeenclicked = </span><span class="s0">True</span>
+        <span class="s1">self.weapon.center_x = self.playerSprite.center_x</span>
+        <span class="s1">self.weapon.center_y = self.playerSprite.center_y</span>
+        <span class="s1">gapx = x - self.weapon.center_x</span>
+        <span class="s1">gapy = y - self.weapon.center_y</span>
+        <span class="s1">bulletAngle = math.atan2(gapy</span><span class="s0">, </span><span class="s1">gapx)</span>
+        <span class="s1">self.weapon.angle = math.degrees(bulletAngle)</span>
+
+        <span class="s1">self.weapon.change_x = math.cos(bulletAngle) * bulletspeed</span>
+        <span class="s1">self.weapon.change_y = math.sin(bulletAngle) * bulletspeed</span>
+
+
+<span class="s4">#    Deals with input on key press</span>
+    <span class="s0">def </span><span class="s1">on_key_press(self</span><span class="s0">, </span><span class="s1">key</span><span class="s0">, </span><span class="s1">modifiers):</span>
+        <span class="s0">if </span><span class="s1">key == arcade.key.LEFT </span><span class="s0">or </span><span class="s1">key == arcade.key.A:</span>
+            <span class="s1">self.playerSpritevelx = -</span><span class="s2">300</span>
+        <span class="s0">if </span><span class="s1">key == arcade.key.RIGHT </span><span class="s0">or </span><span class="s1">key == arcade.key.D:</span>
+            <span class="s1">self.playerSpritevelx = </span><span class="s2">300</span>
+        <span class="s0">if </span><span class="s1">key == arcade.key.UP </span><span class="s0">or </span><span class="s1">key == arcade.key.W:</span>
+            <span class="s1">self.playerSpritevely = </span><span class="s2">300</span>
+        <span class="s0">if </span><span class="s1">key == arcade.key.DOWN </span><span class="s0">or </span><span class="s1">key == arcade.key.S:</span>
+            <span class="s1">self.playerSpritevely = -</span><span class="s2">300</span>
+
+
+        <span class="s0">if </span><span class="s1">key == arcade.key.ESCAPE:</span>
+            <span class="s1">arcade.close_window()</span>
+        <span class="s0">if </span><span class="s1">key == arcade.key.P:</span>
+            <span class="s1">self.paused = </span><span class="s0">not </span><span class="s1">self.paused</span>
+
+
+<span class="s4">#    This method deals with input from releasing keys</span>
+    <span class="s0">def </span><span class="s1">on_key_release(self</span><span class="s0">, </span><span class="s1">key</span><span class="s0">, </span><span class="s1">modifiers: int):</span>
+        <span class="s0">if </span><span class="s1">key == arcade.key.LEFT </span><span class="s0">or </span><span class="s1">key == arcade.key.A:</span>
+            <span class="s1">self.playerSpritevelx = </span><span class="s2">0</span>
+        <span class="s0">if </span><span class="s1">key == arcade.key.RIGHT </span><span class="s0">or </span><span class="s1">key == arcade.key.D:</span>
+            <span class="s1">self.playerSpritevelx = </span><span class="s2">0</span>
+        <span class="s0">if </span><span class="s1">key == arcade.key.UP </span><span class="s0">or </span><span class="s1">key == arcade.key.W:</span>
+            <span class="s1">self.playerSpritevely = </span><span class="s2">0</span>
+        <span class="s0">if </span><span class="s1">key == arcade.key.DOWN </span><span class="s0">or </span><span class="s1">key == arcade.key.S:</span>
+            <span class="s1">self.playerSpritevely = </span><span class="s2">0</span>
+
+<span class="s0">def </span><span class="s1">main():</span>
+    <span class="s1">window = arcade.Window(screenwidth</span><span class="s0">, </span><span class="s1">screenheight</span><span class="s0">, </span><span class="s1">title</span><span class="s0">, </span><span class="s1">full_screen</span><span class="s0">, </span><span class="s1">isWindowResizable)</span>
+    <span class="s1">startview = StartScreenView()</span>
+    <span class="s1">window.show_view(startview)</span>
+    <span class="s1">arcade.run()</span>
+
+
+<span class="s0">if </span><span class="s1">__name__ == </span><span class="s3">'__main__'</span><span class="s1">:</span>
+    <span class="s1">main()</span>
+
+
+
+</pre>
+</body>
+</html>
